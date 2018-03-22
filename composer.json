@@ -4,7 +4,7 @@
     "description" : "Swiftmailer Mailgun bundle",
     "keywords" : ["E-Mail", "Swiftmailer", "mailgun", "symfony"],
     "homepage" : "https://github.com/gulaandrij/swiftmailer-mailgun-bundle",
-    "license" : "GPL-2.0+",
+    "license" : "MIT",
     "minimum-stability" : "stable",
     "require": {
         "php": "^7.0",
