@@ -14,9 +14,9 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 class Configuration implements ConfigurationInterface
 {
     /**
-     * {@inheritdoc}
+     * @return TreeBuilder
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('cspoo_swiftmailer_mailgun');
@@ -26,6 +26,9 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
+    /**
+     * @param ArrayNodeDefinition $rootNode
+     */
     private function addAPIConfigSection(ArrayNodeDefinition $rootNode)
     {
         $rootNode

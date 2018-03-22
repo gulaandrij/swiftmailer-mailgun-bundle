@@ -48,7 +48,7 @@ class cspooSwiftmailerMailgunExtension extends Extension
 
     /**
      * @param ContainerBuilder $container
-     * @param array $config
+     * @param array            $config
      */
     private function registerMailgunService(ContainerBuilder $container, array $config)
     {

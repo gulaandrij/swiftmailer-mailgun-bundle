@@ -47,15 +47,24 @@ class MailgunTransport implements Swift_Transport
      *
      * @return array
      */
-    public static function getMailgunHeaders()
+    public static function getMailgunHeaders(): array
     {
-        return array('o:tag', 'o:campaign', 'o:deliverytime', 'o:dkim', 'o:testmode', 'o:tracking', 'o:tracking-clicks', 'o:tracking-opens');
+        return [
+                'o:tag',
+                'o:campaign',
+                'o:deliverytime',
+                'o:dkim',
+                'o:testmode',
+                'o:tracking',
+                'o:tracking-clicks',
+                'o:tracking-opens',
+               ];
     }
 
     /**
      * Not used.
      */
-    public function isStarted()
+    public function isStarted(): bool
     {
         return true;
     }
@@ -81,13 +90,14 @@ class MailgunTransport implements Swift_Transport
      * The return value is the number of recipients who were accepted for delivery.
      *
      * @param Swift_Mime_SimpleMessage $message
-     * @param string[]           $failedRecipients An array of failures by-reference
+     * @param string[]                 $failedRecipients An array of failures by-reference
+     *
+     * @return int number of mails sent
      *
      * @throws \Swift_TransportException
-     * 
-     * @return int number of mails sent
+     * @throws \Swift_RfcComplianceException
      */
-    public function send(Swift_Mime_SimpleMessage $message, &$failedRecipients = null)
+    public function send(Swift_Mime_SimpleMessage $message, &$failedRecipients = null): int
     {
         $failedRecipients = (array) $failedRecipients;
 
@@ -104,7 +114,7 @@ class MailgunTransport implements Swift_Transport
 
         $postData = $this->getPostData($message);
         $domain = $this->getDomain($message);
-        $sent = count($postData['to']);
+        $sent = \count($postData['to']);
         try {
             $this->mailgun->messages()->sendMime($domain, $postData['to'], $message->toString(), $postData);
             $resultStatus = Swift_Events_SendEvent::RESULT_SUCCESS;
@@ -137,8 +147,12 @@ class MailgunTransport implements Swift_Transport
      * Looks at the message headers to find post data.
      *
      * @param Swift_Message $message
+     *
+     * @return array
+     *
+     * @throws \Swift_RfcComplianceException
      */
-    protected function getPostData(Swift_Message $message)
+    protected function getPostData(Swift_Message $message): array
     {
         // get "form", "to" etc..
         $postData = $this->prepareRecipients($message);
@@ -147,7 +161,9 @@ class MailgunTransport implements Swift_Transport
         $messageHeaders = $message->getHeaders();
 
         foreach ($mailgunHeaders as $headerName) {
-            /** @var \Swift_Mime_Headers_MailboxHeader $value */
+            /**
+ * @var \Swift_Mime_Headers_MailboxHeader $value
+*/
             if (null !== $value = $messageHeaders->get($headerName)) {
                 $postData[$headerName] = $value->getFieldBody();
                 $messageHeaders->removeAll($headerName);
@@ -162,21 +178,27 @@ class MailgunTransport implements Swift_Transport
      *
      * @return array
      */
-    protected function prepareRecipients(Swift_Message $message)
+    protected function prepareRecipients(Swift_Message $message): array
     {
-        $headerNames = array('from', 'to', 'bcc', 'cc');
+        $headerNames = [
+                        'from',
+                        'to',
+                        'bcc',
+                        'cc',
+                       ];
         $messageHeaders = $message->getHeaders();
-        $postData = array();
+        $postData = [];
         foreach ($headerNames as $name) {
-            /** @var \Swift_Mime_Headers_MailboxHeader $h */
+            /**
+ * @var \Swift_Mime_Headers_MailboxHeader $h
+*/
             $h = $messageHeaders->get($name);
-            $postData[$name] = $h === null ? array() : $h->getAddresses();
+            $postData[$name] = $h === null ? [] : $h->getAddresses();
         }
 
         // Merge 'bcc' and 'cc' into 'to'.
         $postData['to'] = array_merge($postData['to'], $postData['bcc'], $postData['cc']);
-        unset($postData['bcc']);
-        unset($postData['cc']);
+        unset($postData['bcc'], $postData['cc']);
 
         // Remove Bcc to make sure it is hidden
         $messageHeaders->removeAll('bcc');
@@ -191,7 +213,7 @@ class MailgunTransport implements Swift_Transport
      *
      * @return string
      */
-    protected function getDomain(Swift_Message $message)
+    protected function getDomain(Swift_Message $message): string
     {
         $messageHeaders = $message->getHeaders();
         if ($messageHeaders->has(self::DOMAIN_HEADER)) {
@@ -207,7 +229,7 @@ class MailgunTransport implements Swift_Transport
     /**
      * Not used.
      */
-    public function ping()
+    public function ping(): bool
     {
         return true;
     }

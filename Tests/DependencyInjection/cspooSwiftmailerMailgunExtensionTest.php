@@ -12,9 +12,7 @@ class cspooSwiftmailerMailgunExtensionTest extends AbstractExtensionTestCase
 {
     protected function getContainerExtensions()
     {
-        return array(
-            new cspooSwiftmailerMailgunExtension()
-        );
+        return [new cspooSwiftmailerMailgunExtension()];
     }
 
     /**
@@ -22,7 +20,10 @@ class cspooSwiftmailerMailgunExtensionTest extends AbstractExtensionTestCase
      */
     protected function getMinimalConfiguration()
     {
-        return array('key'=>'foo','domain'=>'bar');
+        return [
+                'key'    => 'foo',
+                'domain' => 'bar',
+               ];
     }
 
 

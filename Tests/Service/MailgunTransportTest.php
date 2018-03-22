@@ -13,13 +13,13 @@ class MailgunTransportTest extends \PHPUnit_Framework_TestCase
     {
         $class = 'cspoo\Swiftmailer\MailgunBundle\Service\MailgunTransport';
         $transport = $this->getMockBuilder($class)
-        ->disableOriginalConstructor()
-        ->setMethods(array('prepareRecipients'))
-        ->getMock();
+            ->disableOriginalConstructor()
+            ->setMethods(['prepareRecipients'])
+            ->getMock();
 
         $transport->expects($this->once())
             ->method('prepareRecipients')
-            ->willReturn(array('foo' => 'bar'));
+            ->willReturn(['foo' => 'bar']);
 
         $method = new \ReflectionMethod($class, 'getPostData');
         $method->setAccessible(true);
@@ -167,7 +167,7 @@ class MailgunTransportTest extends \PHPUnit_Framework_TestCase
 
         $messageApi->expects($this->any())
             ->method('sendMime')
-            ->willReturn(SendResponse::create(['id'=>'123', 'message'=>'OK']));
+            ->willReturn(SendResponse::create(['id' => '123', 'message' => 'OK']));
 
         $mailgun = $this->getMockBuilder('Mailgun\Mailgun')
             ->getMock();

@@ -14,7 +14,7 @@ http interface for sending messages.
 ## Installation
 
 ```bash
-composer require cspoo/swiftmailer-mailgun-bundle php-http/guzzle5-adapter
+composer require gylaandrij/swiftmailer-mailgun-bundle php-http/guzzle5-adapter
 ```
 
 *Note: You can use any of [these adapters](https://packagist.org/providers/php-http/client-implementation)*
